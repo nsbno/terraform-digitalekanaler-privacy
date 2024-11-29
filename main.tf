@@ -1,14 +1,14 @@
 
 
 data "aws_sns_topic" "privacy_sns" {
-  name = "privacy"
+  name = "privacy-requests"
 }
 
 
 module "queue" {
   source = "github.com/nsbno/terraform-aws-queue?ref=0.0.5"
 
-  name                 = "${var.application_name}-privacy"
+  name                 = "${var.application_name}-privacy-requests"
   is_fifo              = false
   raw_message_delivery = true
   visibility_timeout   = 30
@@ -36,7 +36,7 @@ module "queue" {
 }
 
 data "aws_sns_topic" "privacy_audit" {
-  name = "privacy-audit"
+  name = "privacy-confirmations"
 }
 
 data "aws_iam_policy_document" "privacy_iam_policy_document" {
