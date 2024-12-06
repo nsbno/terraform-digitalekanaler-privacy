@@ -17,3 +17,7 @@ variable "privacy_service_enum" {
 variable "task_role_name" {
   type = string
 }
+
+variable "current_account_id" {
+  type = string
+}
