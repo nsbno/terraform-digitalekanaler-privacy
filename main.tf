@@ -75,3 +75,40 @@ resource "aws_iam_role_policy_attachment" "privacy_policy_attachment" {
   role       = var.task_role_name
   policy_arn = aws_iam_policy.privacy_iam_policy.arn
 }
+
+data "aws_kms_key" "user_data_encryption_key" {
+  key_id = "arn:aws:kms:eu-west-1:${var.current_account_id}:alias/user_data_v2_s3_encryption_key"
+}
+
+data "aws_s3_bucket" "privacy_bucket" {
+  bucket = "${var.current_account_id}-user-data-v2"
+}
+
+data "aws_iam_policy_document" "s3_access" {
+  statement {
+    actions = [
+      "s3:PutObject"
+    ]
+    effect = "Allow"
+
+    resources = [
+      "${data.aws_s3_bucket.privacy_bucket.arn}/**/${var.privacy_service_enum}.json"
+    ]
+  }
+  statement {
+    actions   = ["kms:GenerateDataKey"]
+    resources = [data.aws_kms_key.user_data_encryption_key.arn]
+  }
+}
+
+resource "aws_iam_policy" "s3_iam_policy" {
+  name = "${var.application_name}-s3-iam-policy"
+  path = "/"
+  description = "Grants access to put object in privacy-bucket"
+  policy = data.aws_iam_policy_document.s3_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
+  policy_arn = aws_iam_policy.s3_iam_policy.arn
+  role       = var.task_role_name
+}
