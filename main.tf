@@ -92,7 +92,8 @@ data "aws_iam_policy_document" "s3_access" {
     effect = "Allow"
 
     resources = [
-      "${data.aws_s3_bucket.privacy_bucket.arn}/**/${var.privacy_service_enum}.json"
+      "${data.aws_s3_bucket.privacy_bucket.arn}/**/${var.privacy_service_enum}.json",
+      "${data.aws_s3_bucket.privacy_bucket.arn}/**/${var.privacy_service_enum}/*"
     ]
   }
   statement {
