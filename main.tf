@@ -6,7 +6,7 @@ data "aws_sns_topic" "privacy_sns" {
 
 
 module "queue" {
-  source = "github.com/nsbno/terraform-aws-queue?ref=0.0.5"
+  source = "github.com/nsbno/terraform-aws-queue?ref=0.5.1"
 
   name                 = "${var.application_name}-privacy-requests"
   is_fifo              = false
