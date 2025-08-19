@@ -12,6 +12,7 @@ module "queue" {
   is_fifo              = false
   raw_message_delivery = true
   visibility_timeout   = 30
+  message_retention_seconds_dlq = 60 * 60 * 24 * 14
   subscribe_sns_arns   = [data.aws_sns_topic.privacy_sns.arn]
 
   filter_policy = jsonencode(
